@@ -3,7 +3,7 @@ import logging
 import os
 from datetime import datetime
 
-LOG_DIR= "Robosort_logs"
+LOG_DIR= "logs"
 
 CURRENT_TIME_STEMP= f"{datetime.now().strftime('%Y-%m-%d %H-%M-%S')}"
 
