@@ -1,28 +1,28 @@
-import sys
+import os, sys 
 
 
-def error_message_detail(error, error_detail: sys):
-    _, _, exc_tb = error_detail.exc_info()
-
-    file_name = exc_tb.tb_frame.f_code.co_filename
-
-    error_message = "Error occurred python script name [{0}] line number [{1}] error message [{2}]".format(
-        file_name, exc_tb.tb_lineno, str(error)
-    )
-
-    return error_message
-
-
-class AppException(Exception):
-    def __init__(self, error_message, error_detail):
-        """
-        :param error_message: error message in string format
-        """
+class ProjectException(Exception):
+    def __init__(self, error_message:Exception, error_detail:sys):
         super().__init__(error_message)
-
-        self.error_message = error_message_detail(
-            error_message, error_detail=error_detail
-        )
-
+        self.error_message=ProjectException.get_detailed_error_message(error_message=error_message,
+                                                                       error_detail=error_detail)
+        
+    @staticmethod
+    def get_detailed_error_message(error_message:Exception,error_detail:sys):
+        _,_,exec_tb = error_detail.exc_info()
+        exception_block_line_number= exec_tb.tb_frame.f_lineno
+        try_block_line_number=exec_tb.tb_lineno
+        file_name = exec_tb.tb_frame.f_code.co_filename
+        error_message=f"""
+        Error occured in script:
+        [{file_name}] at try block line number: [{try_block_line_number}]
+        and exception block line number: [{exception_block_line_number}]
+        erro_message: [{error_message}]        
+        """
+        return error_message
+    
     def __str__(self):
         return self.error_message
+    
+    def __repr__(self):
+        return ProjectException.__name__.str()
